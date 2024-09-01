@@ -5,6 +5,8 @@ import torch.nn.functional as F
 from .warplayer import warp
 from .refine import *
 
+from huggingface_hub import PyTorchModelHubMixin
+
 def conv(in_planes, out_planes, kernel_size=3, stride=1, padding=1, dilation=1):
     return nn.Sequential(
         nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride,
@@ -42,7 +44,7 @@ class Head(nn.Module):
         return flow, mask
 
     
-class MultiScaleFlow(nn.Module):
+class MultiScaleFlow(nn.Module, PyTorchModelHubMixin, repo_url="https://github.com/MCG-NJU/EMA-VFI", pipeline_tag="video-frame-interpolation"):
     def __init__(self, backbone, **kargs):
         super(MultiScaleFlow, self).__init__()
         self.flow_num_stage = len(kargs['hidden_dims'])
